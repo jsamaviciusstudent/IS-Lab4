@@ -1,21 +1,21 @@
 close all
 clear all
 clc
-%% raidþiø pavyzdþiø nuskaitymas ir poþymiø skaièiavimas
 %% read the image with hand-written characters
-pavadinimas = 'train_data.png';
-pozymiai_tinklo_mokymui = pozymiai_raidems_atpazinti(pavadinimas, 8);
-%% Atpaþintuvo kûrimas
+pavadinimas = 'letterstwo.jpg'; % 11 columns,8 lines
+pozymiai_tinklo_mokymui = pozymiai_raidems_atpazinti(pavadinimas, 2);
+%% Doesn't work propely
+% For some reason, when it is correct number of lines (11 for
+% columntwoone.jpg, 8 for letters.jpg), it does not fully work. Only owrks
+% at (pavadinimas, 2) at max
 %% Development of character recognizer
-% poþymiai ið celiø masyvo perkeliami á matricà
 % take the features from cell-type variable and save into a matrix-type variable
 P = cell2mat(pozymiai_tinklo_mokymui);
-% sukuriama teisingø atsakymø matrica: 11 raidþiø, 8 eilutës mokymui
 % create the matrices of correct answers for each line (number of matrices = number of symbol lines)
-T = [eye(11), eye(11), eye(11), eye(11), eye(11), eye(11), eye(11), eye(11)];
-% sukuriamas SBF tinklas duotiems P ir T sàryðiams
+T = [eye(11), eye(11)];
+
 % create an RBF network for classification with 13 neurons, and sigma = 1
-tinklas = newrb(P,T,0,1,13);
+tinklas = newrb(P,T,0,1,1);
 
 %% Tinklo patikra | Test of the network (recognizer)
 % skaièiuojamas tinklo iðëjimas neþinomiems poþymiams
@@ -30,6 +30,7 @@ Y2 = sim(tinklas, P2);
 % apskaièiuosime raidþiø skaièiø - poþymiø P2 stulpeliø skaièiø
 % calculate the total number of symbols in the row
 raidziu_sk = size(P2,2);
+disp(raidziu_sk)
 % rezultatà saugosime kintamajame 'atsakymas'
 % we will save the result in variable 'atsakymas'
 atsakymas = [];
@@ -62,11 +63,12 @@ for k = 1:raidziu_sk
 end
 % pateikime rezultatà komandiniame lange
 % show the result in command window
+disp('REsult of training:')
 disp(atsakymas)
-% % figure(7), text(0.1,0.5,atsakymas,'FontSize',38)
+figure(7), text(0.1,0.5,atsakymas,'FontSize',38)
 %% þodþio "KADA" poþymiø iðskyrimas 
 %% Extract features of the test image
-pavadinimas = 'test_kada.png';
+pavadinimas = 'word.jpeg';
 pozymiai_patikrai = pozymiai_raidems_atpazinti(pavadinimas, 1);
 
 %% Raidþiø atpaþinimas
@@ -113,11 +115,12 @@ for k = 1:raidziu_sk
     end
 end
 % pateikime rezultatà komandiniame lange
-% disp(atsakymas)
+disp('REsult of badeg:')
+disp(atsakymas)
 figure(8), text(0.1,0.5,atsakymas,'FontSize',38), axis off
-%% þodþio "FIKCIJA" poþymiø iðskyrimas 
+%% þodþio "KADAGIS" poþymiø iðskyrimas 
 %% extract features for next/another test image
-pavadinimas = 'test_fikcija.png';
+pavadinimas = 'kadagis.jpg';
 pozymiai_patikrai = pozymiai_raidems_atpazinti(pavadinimas, 1);
 
 %% Raidþiø atpaþinimas
@@ -159,6 +162,6 @@ for k = 1:raidziu_sk
     end
 end
 % pateikime rezultatà komandiniame lange
-% disp(atsakymas)
+disp('Result of kadagis')
+disp(atsakymas)
 figure(9), text(0.1,0.5,atsakymas,'FontSize',38), axis off
-
